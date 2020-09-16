@@ -11,4 +11,24 @@
     <string name="pause">Pause</string>
     <string name="refresh_now">Refresh now</string>
     <string name="asova_kter_po_ub_hnut_asu_aktualizuje_danky_zat_m_je_interval_nastaven_na_30s">Časovač, který po uběhnutí času aktualizuje žádanky. Zatím je interval nastavený na 30s.</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="action_settings">Settings</string>
+    <string name="display_text">Visible txt</string>
+    <string name="API">URL to API</string>
+    <string name="API_header">API</string>
 </resources>

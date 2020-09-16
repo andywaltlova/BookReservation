@@ -5,6 +5,7 @@
         <item name="colorPrimary">#009688</item>
         <item name="colorPrimaryDark">#02B8A7</item>
         <item name="colorAccent">#FF9800</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
 </resources>

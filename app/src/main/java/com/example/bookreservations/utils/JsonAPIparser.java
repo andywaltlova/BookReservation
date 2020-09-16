@@ -33,6 +33,7 @@ public class JsonAPIparser {
     private TextView text_view_barcode;
     private TextView text_view_time;
     private TextView text_view_date;
+
     private TextView empty_view;
     private TextView test_view;
 
@@ -40,8 +41,8 @@ public class JsonAPIparser {
     private String[] signature = {"-"};
 
 
-    public JsonAPIparser(Activity activity, View root, RequestQueue queue, String apiPassword) {
-        this.apiUrl = "http://knihomol.phil.muni.cz/cgi-bin/alephsql.exe?psw=" + apiPassword + "&req=requests2&fmt=json";
+    public JsonAPIparser(Activity activity, View root, RequestQueue queue, String apiUrl) {
+        this.apiUrl = apiUrl;
         this.mQueue = queue;
         this.notifications = new Notifications(activity);
 

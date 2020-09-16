@@ -1,13 +1,33 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/API_header">
+    <PreferenceCategory android:title="@string/API_header">
 
         <EditTextPreference
+            android:icon="@drawable/ic_baseline_insert_link_24"
             app:key="api_url"
+            app:summary="URL address for API with book reservations"
             app:title="@string/API"
             app:useSimpleSummaryProvider="true" />
 
 
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_notifications">
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="notify"
+            android:summary="Click to turn on or off"
+            android:title="Notification"
+            app:icon="@drawable/ic_baseline_notifications_active_24" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:dependency="notify"
+            android:key="key_vibrate"
+            android:summary="Vibrate on new notification"
+            android:title="Vibrate"
+            app:icon="@drawable/ic_baseline_vibration_24" />
     </PreferenceCategory>
 
     <!--

@@ -1,6 +1,5 @@
 package com.example.bookreservations.utils;
 
-import android.app.Activity;
 import android.os.Build;
 import android.text.Html;
 import android.view.View;
@@ -41,10 +40,10 @@ public class JsonAPIparser {
     private String[] signature = {"-"};
 
 
-    public JsonAPIparser(Activity activity, View root, RequestQueue queue, String apiUrl) {
+    public JsonAPIparser(View root, RequestQueue queue, String apiUrl, Notifications notifications) {
         this.apiUrl = apiUrl;
         this.mQueue = queue;
-        this.notifications = new Notifications(activity);
+        this.notifications = notifications;
 
         text_view_order = root.findViewById(R.id.text_view_order);
         text_view_signatures = root.findViewById(R.id.text_view_signatures);
@@ -76,105 +75,108 @@ public class JsonAPIparser {
         text_view_time.setText("");
         text_view_date.setText("");
 
+        JsonArrayRequest request =
+                new JsonArrayRequest(Request.Method.GET, apiUrl, null, new Response.Listener<JSONArray>() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        String[] text = {""};
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, apiUrl, null, new Response.Listener<JSONArray>() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onResponse(JSONArray response) {
-                String[] text = {""};
+                        test_view.setText("");
 
-                test_view.setText("");
-
-                if (!last_signature[0].equals(signature[0])) {
-                    String textMessage = "Signatura: " + parseSignature(signature[0]);
-                    notifications.sendNotification("Nová rezervace", textMessage);
-                }
-
-                test_view.append("Předposlední: " + parseSignature(last_signature[0]) + "\n");
-                last_signature[0] = signature[0];
-                int order = 0;
-
-                if (response.length() == 0)
-                    empty_view.append("Nic k vyhledání :)" + "\n");
-                else {
-                    empty_view.setText("");
-                    for (int i = response.length() - 1; i >= 0; i--) {
-                        try {
-                            JSONArray jsonArray = response.getJSONArray(i);
-
-                            String date_raw = jsonArray.getString(0);
-                            String date_first_slash = date_raw.replaceAll("^....(?!$)", "$0/");
-                            String date = date_first_slash.replaceAll("^.......(?!$)", "$0/");
-
-                            String time_raw = jsonArray.getString(1);
-                            int time_int = Integer.parseInt(time_raw);
-                            String time_4d = String.format(Locale.getDefault(), "%04d", time_int);
-                            String time_colon = time_4d.replaceAll("..(?!$)", "$0:");
-                            LocalTime time = LocalTime.parse(time_colon);
-                            LocalTime now = LocalTime.now();
-                            int time_minutes = time.getMinute();
-                            int now_minutes = now.getMinute();
-                            int time_hours = time.getHour();
-                            int now_hours = now.getHour();
-                            int d_hours = Math.abs(now_hours - time_hours);
-                            int d_minutes = Math.abs(now_minutes - time_minutes);
-
-                            //String uco = jsonArray.getString(2);
-                            String barcode = jsonArray.getString(3);
-                            String sbirka = jsonArray.getString(4);
-                            //String patro = jsonArray.getString(5);
-                            //String popis = jsonArray.getString(7);
-                            //String status = jsonArray.getString(8);
-                            //String nazev = jsonArray.getString(9);
-
-                            if (sbirka.equals("SKLAD")) {
-                                signature[0] = jsonArray.getString(6);
-
-                                //TODO: Color only with today dates
-                                if (d_hours == 0) {
-                                    if (d_minutes > 10 && d_minutes < 20) {
-                                        text[0] += "<font color=#FF8C00>" + time + "</font>" + "\n";
-                                    } else if (d_minutes > 0 && d_minutes < 10) {
-                                        text[0] += "<font color=#9ACD32>" + time + "</font>" + "\n";
-                                    } else {
-                                        text[0] += "<font color=#DC143C>" + time + "</font>" + "\n";
-                                    }
-
-                                } else {
-                                    text[0] += "<font color=#DC143C>" + time + "</font>" + "\n";
-
-                                }
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                    text_view_time.setText(Html.fromHtml(text[0], Html.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE);
-                                } else {
-                                    text_view_time.setText(Html.fromHtml(text[0]), TextView.BufferType.SPANNABLE);
-                                }
-                                if (order < 10) {
-                                    text_view_order.append("0" + order + ". " + "\n");
-                                    //text_view_time.append(time + "\n");
-                                } else {
-                                    text_view_order.append(order + ". " + "\n");
-                                    //text_view_time.append(time + "\n");
-                                }
-                                text_view_signatures.append(parseSignature(signature[0]) + "\n");
-                                text_view_barcode.append(barcode + "\n");
-                                text_view_date.append(date + "\n");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        if (!last_signature[0].equals(signature[0])) {
+                            String textMessage = "Signatura: " + parseSignature(signature[0]);
+                            notifications.sendNotification("Nová rezervace", textMessage);
                         }
-                        order++;
+
+                        test_view.append("Předposlední: " + parseSignature(last_signature[0]) + "\n");
+                        last_signature[0] = signature[0];
+                        int order = 1;
+
+                        if (response.length() == 0)
+                            empty_view.append("Nic k vyhledání :)");
+                        else {
+                            for (int i = response.length() - 1; i >= 0; i--) {
+                                try {
+                                    JSONArray jsonArray = response.getJSONArray(i);
+
+                                    String date_raw = jsonArray.getString(0);
+                                    String date_first_slash = date_raw.replaceAll("^....(?!$)", "$0/");
+                                    String date = date_first_slash.replaceAll("^.......(?!$)", "$0/");
+
+                                    String time_raw = jsonArray.getString(1);
+                                    int time_int = Integer.parseInt(time_raw);
+                                    String time_4d = String.format(Locale.getDefault(), "%04d", time_int);
+                                    String time_colon = time_4d.replaceAll("..(?!$)", "$0:");
+                                    LocalTime time = LocalTime.parse(time_colon);
+                                    LocalTime now = LocalTime.now();
+                                    int time_minutes = time.getMinute();
+                                    int now_minutes = now.getMinute();
+                                    int time_hours = time.getHour();
+                                    int now_hours = now.getHour();
+                                    int d_hours = Math.abs(now_hours - time_hours);
+                                    int d_minutes = Math.abs(now_minutes - time_minutes);
+
+                                    //String uco = jsonArray.getString(2);
+                                    String barcode = jsonArray.getString(3);
+                                    String sbirka = jsonArray.getString(4);
+                                    //String patro = jsonArray.getString(5);
+                                    //String popis = jsonArray.getString(7);
+                                    //String status = jsonArray.getString(8);
+                                    //String nazev = jsonArray.getString(9);
+
+                                    if (sbirka.equals("SKLAD")) {
+                                        signature[0] = jsonArray.getString(6);
+
+                                        //TODO: Color only with today dates
+                                        if (d_hours == 0) {
+                                            if (d_minutes > 10 && d_minutes < 20) {
+                                                text[0] += "<font color=#FF8C00>" + time + "</font>" + "\n";
+                                            } else if (d_minutes > 0 && d_minutes < 10) {
+                                                text[0] += "<font color=#9ACD32>" + time + "</font>" + "\n";
+                                            } else {
+                                                text[0] += "<font color=#DC143C>" + time + "</font>" + "\n";
+                                            }
+
+                                        } else {
+                                            text[0] += "<font color=#DC143C>" + time + "</font>" + "\n";
+
+                                        }
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                            text_view_time.setText(Html.fromHtml(text[0], Html.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE);
+                                        } else {
+                                            text_view_time.setText(Html.fromHtml(text[0]), TextView.BufferType.SPANNABLE);
+                                        }
+                                        if (order < 10) {
+                                            text_view_order.append("0" + order + ". " + "\n");
+                                            //text_view_time.append(time + "\n");
+                                        } else {
+                                            text_view_order.append(order + ". " + "\n");
+                                            //text_view_time.append(time + "\n");
+                                        }
+                                        text_view_signatures.append(parseSignature(signature[0]) + "\n");
+                                        text_view_barcode.append(barcode + "\n");
+                                        text_view_date.append(date + "\n");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                order++;
+                            }
+                        }
+                        test_view.append("Nejnovější: " + parseSignature(signature[0]));
                     }
-                }
-                test_view.append("Nejnovější: " + parseSignature(signature[0]));
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
 
         mQueue.add(request);
+    }
+
+    public void setApiUrl(String apiUrl) {
+        this.apiUrl = apiUrl;
     }
 }

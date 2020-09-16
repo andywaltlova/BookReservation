@@ -3,6 +3,7 @@ package com.example.bookreservations;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,7 +13,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import androidx.annotation.RequiresApi;
@@ -22,12 +25,18 @@ import androidx.preference.PreferenceManager;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.bookreservations.utils.JsonAPIparser;
+import com.example.bookreservations.utils.Notifications;
 import com.example.bookreservations.utils.Timer;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-    String apiUrl;
-    JsonAPIparser parser;
-    View root;
+    private String apiUrl;
+    private boolean shouldNotify;
+    private boolean shouldVibrate;
+
+    private Notifications notifications;
+    private RequestQueue requestQueue;
+    private JsonAPIparser parser;
+    private View root;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -41,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         my_image.setImageResource(R.drawable.logo_knihovna);
 
         Button refresh_button = findViewById(R.id.refresh_button);
+
         refresh_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,25 +60,30 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         setupSharedPreferences();
 
-        RequestQueue mQueue = Volley.newRequestQueue(this);
-        parser = new JsonAPIparser(this, root, mQueue, apiUrl);
+        requestQueue = Volley.newRequestQueue(this);
+        notifications = new Notifications(this, shouldNotify, shouldVibrate);
+        parser = new JsonAPIparser(root, requestQueue, apiUrl, notifications);
         new Timer(root, parser);
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null)
             parser.jsonParse();
-        }
-
-        setupSharedPreferences();
     }
 
-
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (getCurrentFocus() != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
         }
-        return super.dispatchTouchEvent(ev);
+        return super.dispatchTouchEvent(event);
     }
 
     @Override
@@ -86,30 +101,34 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             startActivity(intent);
             return true;
         }
+        if (id == R.id.about) {
+            Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+            startActivity(intent);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void setupSharedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        this.apiUrl = sharedPreferences.getString("api_url", null);
 
+        setPreferences(sharedPreferences);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("api_url")) {
 
-            this.apiUrl = sharedPreferences.getString("api_url", null);
+            setPreferences(sharedPreferences);
 
-            //setTextVisible(sharedPreferences.getBoolean("display_text",true));
-            // Should also set view and buttons that timer uses
-            RequestQueue mQueue = Volley.newRequestQueue(this);
-            parser = new JsonAPIparser(this, root, mQueue, apiUrl);
+            notifications.setShouldNotify(shouldNotify);
+            notifications.setShouldVibrate(shouldVibrate);
+            parser.setApiUrl(apiUrl);
             new Timer(root, parser);
-
+            parser.jsonParse();
         }
     }
 
@@ -119,4 +138,17 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         androidx.preference.PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
+
+    private void setPreferences(SharedPreferences sharedPreferences) {
+        this.apiUrl = sharedPreferences.getString("api_url", null);
+        TextView url_view = findViewById(R.id.empty);
+        if (apiUrl.equals("") || apiUrl.isEmpty()) {
+            url_view.setText("! API URL address is not set !\n\n(Settings -> API URL)");
+        } else {
+            url_view.setText("");
+        }
+        this.shouldNotify = sharedPreferences.getBoolean("notify", true);
+        this.shouldVibrate = sharedPreferences.getBoolean("key_vibrate", true);
+    }
+
 }

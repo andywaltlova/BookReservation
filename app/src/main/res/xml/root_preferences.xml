@@ -6,9 +6,9 @@
         <EditTextPreference
             android:icon="@drawable/ic_baseline_insert_link_24"
             app:key="api_url"
-            app:summary="URL address for API with book reservations"
+            app:summary="Click to change API URL address"
             app:title="@string/API"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="false" />
 
 
     </PreferenceCategory>

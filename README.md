@@ -1,15 +1,19 @@
-# BookReservations
+# LibraryApp
 
-Application for managing book requests from the library stocks.
-My first experience with Java and the development of a mobile application.
+### WHAT IT IS
+Application is used to monitor requests for books that are in stocks of Central Library of the Faculty of Arts at Masaryk University. More about our library at https://knihovna.phil.muni.cz/ .
 
-### USAGE
-The application uses a request to extract data from the API and then print it and sort it on the screen. The API requires a password that is not available in the repository files.
+When a new request for a book appears, the application sends a notification containing the location number of the book, which makes it easier to find it in the library stocks.
 
-Example of API response that the application works with (it is a record of one request, ie one book).
+### WHY
+The purpose of this application is to make library work more efficient. Now there is no need to walk around the printer and check if a new request is printed. As a library, we guarantee 20 minutes to process each book request, so it's important for staff to find out about new requests as soon as possible, regardless of where they are in the library.
 
-![API example](Pictures/API_JSON_example.PNG)
+### API response
+The image below illustrates the API response that is used to retrieve current book reservations. For our purposes, the application uses the time, date, barcode and location number fields."
+      
+![API example](images/API_JSON_example.PNG)
 
 ### HOW IT LOOKS
 
-<img src="Pictures/visual.png" alt="drawing" width="300"/> <img src="Pictures/visual_with_notification.png" alt="drawing" width="300"/>
+<img src="images/main_visual.jpg" alt="drawing" width="300"/> <img src="images/notif_visual.jpg" alt="drawing" width="300"/>
+<img src="images/settings_visual.jpg" alt="drawing" width="300"/> <img src="images/about_visual.jpg" alt="drawing" width="300"/>

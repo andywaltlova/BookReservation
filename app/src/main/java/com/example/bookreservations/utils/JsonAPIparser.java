@@ -19,6 +19,7 @@ import org.json.JSONException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 
 
@@ -97,17 +98,13 @@ public class JsonAPIparser {
         return LocalDate.parse(date);
     }
 
-    private String colorTime(LocalTime time, int d_hours, int d_minutes) {
-        //TODO: Color only with today dates
+    private String colorTime(LocalTime time, long d_minutes) {
         String result;
-        if (d_hours == 0) {
-            if (d_minutes > 10 && d_minutes < 20)
-                result = "<font color=#FF8C00>" + time + "</font>" + "\n";
-            else if (d_minutes > 0 && d_minutes < 10)
-                result = "<font color=#9ACD32>" + time + "</font>" + "\n";
-            else
-                result = "<font color=#DC143C>" + time + "</font>" + "\n";
-        } else
+        if (d_minutes > 10 && d_minutes < 20)
+            result = "<font color=#FF8C00>" + time + "</font>" + "\n";
+        else if (d_minutes > 0 && d_minutes < 10)
+            result = "<font color=#9ACD32>" + time + "</font>" + "\n";
+        else
             result = "<font color=#DC143C>" + time + "</font>" + "\n";
         return result;
     }
@@ -132,9 +129,9 @@ public class JsonAPIparser {
                 LocalTime time = parseTime(jsonArray.getString(1));
                 LocalTime now = LocalTime.now();
 
-                int d_hours = Math.abs(now.getHour() - time.getHour());
-                int d_minutes = Math.abs(now.getMinute() - time.getMinute());
-                timeColumn[0] += colorTime(time, d_hours, d_minutes);
+                long d_minutes = time.until(now, ChronoUnit.MINUTES);
+
+                timeColumn[0] += colorTime(time, d_minutes);
 
                 String barcode = jsonArray.getString(3);
 
@@ -162,8 +159,9 @@ public class JsonAPIparser {
                         last_signature[0] = signature[0];
 
                         if (response.length() == 0)
-                            empty_view.append("Nic k vyhledání :)");
+                            empty_view.setText("Nic k vyhledání :)");
                         else
+                            empty_view.setText("");
                             parseResponse(response);
                     }
                 }, new Response.ErrorListener() {

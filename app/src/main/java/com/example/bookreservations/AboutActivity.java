@@ -20,7 +20,7 @@ public class AboutActivity extends AppCompatActivity {
                 "\n" +
                 "When a new request for a book appears, the application sends a notification containing the location number of the book, which makes it easier to find it in the library stocks.\n" +
                 "\n" +
-                "The purpose of this application is primarily to streamline work. Now there is no need to walk around the printer and check if a new request is printed. As a library, we guarantee 20 minutes to process each book request, so it's important for staff to find out about new requests as soon as possible, regardless of where they are in the library.\n" +
+                "The purpose of this application is to make library work more efficient. Now there is no need to walk around the printer and check if a new request is printed. As a library, we guarantee 20 minutes to process each book request, so it's important for staff to find out about new requests as soon as possible, regardless of where they are in the library.\n" +
                 "\n" +
                 "The image below illustrates the API response that is used to retrieve current book reservations. For our purposes, the application uses the time, date, barcode and location number fields.";
         TextView about_text = findViewById(R.id.about_text);

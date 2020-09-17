@@ -21,38 +21,6 @@
             android:title="Notification"
             app:icon="@drawable/ic_baseline_notifications_active_24" />
 
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:dependency="notify"
-            android:key="key_vibrate"
-            android:summary="Vibrate on new notification"
-            android:title="Vibrate"
-            app:icon="@drawable/ic_baseline_vibration_24" />
     </PreferenceCategory>
-
-    <!--
-    <PreferenceCategory app:title="Examples">
-
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
-    </PreferenceCategory>
-    -->
 
 </PreferenceScreen>

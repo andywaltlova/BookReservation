@@ -53,21 +53,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_time" />
 
+
     <TextView
         android:id="@+id/countdown_text"
-        android:layout_width="163dp"
-        android:layout_height="69dp"
+        android:layout_width="180dp"
+        android:layout_height="81dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
         android:text="@string/_00_30"
+        android:textAlignment="center"
         android:textColor="#E9572D"
         android:textSize="60sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.567"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toEndOf="@+id/button_start"
         app:layout_constraintTop_toBottomOf="@+id/input_time" />
-
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -186,29 +187,25 @@
         android:layout_width="153dp"
         android:layout_height="63dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:freezesText="true"
         app:layout_constraintBottom_toTopOf="@+id/scroll_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/refresh_button"
-        app:layout_constraintTop_toBottomOf="@+id/countdown_text" />
+        app:layout_constraintStart_toEndOf="@+id/refresh_button" />
 
     <Button
         android:id="@+id/submit_time"
         android:layout_width="120dp"
         android:layout_height="50dp"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/refresh_timer"
         app:layout_constraintBottom_toTopOf="@+id/countdown_text"
         app:layout_constraintStart_toEndOf="@+id/input_time"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.75" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_time"

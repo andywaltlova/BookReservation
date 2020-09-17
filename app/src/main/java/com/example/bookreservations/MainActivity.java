@@ -1,10 +1,10 @@
 package com.example.bookreservations;
 
+import android.app.NotificationChannel;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
@@ -29,20 +28,15 @@ import com.example.bookreservations.utils.Notifications;
 import com.example.bookreservations.utils.Timer;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+    private View root;
+    private JsonAPIparser parser;
+    private Notifications notifications;
     private String apiUrl;
     private boolean shouldNotify;
-    private boolean shouldVibrate;
 
-    private Notifications notifications;
-    private RequestQueue requestQueue;
-    private JsonAPIparser parser;
-    private View root;
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         root = findViewById(android.R.id.content).getRootView();
 
@@ -50,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         my_image.setImageResource(R.drawable.logo_knihovna);
 
         Button refresh_button = findViewById(R.id.refresh_button);
-
         refresh_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,12 +53,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         setupSharedPreferences();
 
-        requestQueue = Volley.newRequestQueue(this);
-        notifications = new Notifications(this, shouldNotify, shouldVibrate);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        notifications = new Notifications(this, shouldNotify);
         parser = new JsonAPIparser(root, requestQueue, apiUrl, notifications);
         new Timer(root, parser);
 
-        if (savedInstanceState == null)
+        if (savedInstanceState == null && apiUrl != null)
             parser.jsonParse();
     }
 
@@ -109,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         return super.onOptionsItemSelected(item);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void setupSharedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -117,18 +109,18 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("api_url")) {
-
-            setPreferences(sharedPreferences);
-
-            notifications.setShouldNotify(shouldNotify);
-            notifications.setShouldVibrate(shouldVibrate);
-            parser.setApiUrl(apiUrl);
-            new Timer(root, parser);
-            parser.jsonParse();
+        setPreferences(sharedPreferences);
+        switch (key) {
+            case "api_url": {
+                parser.setApiUrl(apiUrl);
+                new Timer(root, parser);
+                parser.jsonParse();
+            }
+            case "notify": {
+                notifications.setShouldNotify(shouldNotify);
+            }
         }
     }
 
@@ -142,13 +134,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private void setPreferences(SharedPreferences sharedPreferences) {
         this.apiUrl = sharedPreferences.getString("api_url", null);
         TextView url_view = findViewById(R.id.empty);
-        if (apiUrl.equals("") || apiUrl.isEmpty()) {
+        if (apiUrl == null || apiUrl.equals(""))
             url_view.setText("! API URL address is not set !\n\n(Settings -> API URL)");
-        } else {
+        else
             url_view.setText("");
-        }
         this.shouldNotify = sharedPreferences.getBoolean("notify", true);
-        this.shouldVibrate = sharedPreferences.getBoolean("key_vibrate", true);
     }
 
 }

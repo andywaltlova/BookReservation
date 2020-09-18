@@ -1,9 +1,9 @@
-package com.example.bookreservations;
+package com.andy.bookreservations;
 
-import android.app.NotificationChannel;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,9 +23,9 @@ import androidx.preference.PreferenceManager;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.example.bookreservations.utils.JsonAPIparser;
-import com.example.bookreservations.utils.Notifications;
-import com.example.bookreservations.utils.Timer;
+import com.andy.bookreservations.utils.JsonAPIparser;
+import com.andy.bookreservations.utils.Notifications;
+import com.andy.bookreservations.utils.Timer;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private View root;
@@ -60,6 +60,17 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         if (savedInstanceState == null && apiUrl != null)
             parser.jsonParse();
+
+// Firebase crash testing
+//        Button crashButton = findViewById(R.id.crash_button);
+//        crashButton.setTextColor(Color.WHITE);
+//        crashButton.setText("Crash!");
+//        crashButton.setVisibility(View.VISIBLE);
+//        crashButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View view) {
+//                throw new RuntimeException("Test Crash"); // Force a crash
+//            }
+//        });
     }
 
     @Override
@@ -134,9 +145,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private void setPreferences(SharedPreferences sharedPreferences) {
         this.apiUrl = sharedPreferences.getString("api_url", null);
         TextView url_view = findViewById(R.id.empty);
-        if (apiUrl == null || apiUrl.equals(""))
-            url_view.setText("! API URL address is not set !\n\n(Settings -> API URL)");
-        else
+        if (apiUrl == null || apiUrl.equals("")) {
+            url_view.setTextColor(Color.parseColor("#FF5722"));
+            String scared_emoji = new String(Character.toChars(0x1F631));
+            url_view.setText("API URL address is not set\nGo to Settings -> API URL\n\n" + scared_emoji);
+        } else
             url_view.setText("");
         this.shouldNotify = sharedPreferences.getBoolean("notify", true);
     }

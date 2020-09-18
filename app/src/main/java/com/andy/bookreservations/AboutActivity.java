@@ -1,4 +1,4 @@
-package com.example.bookreservations;
+package com.andy.bookreservations;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;

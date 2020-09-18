@@ -6,13 +6,30 @@
     android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/crash_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="36dp"
+        android:backgroundTint="#E31919"
+        android:textColorHint="#FFFFFF"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/FirstImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
         android:id="@+id/refresh_button"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="140dp"
+        android:layout_height="55dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:backgroundTint="#D2009688"
         android:text="@string/refresh_now"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -31,25 +48,16 @@
         app:srcCompat="@drawable/logo_knihovna" />
 
     <Button
-        android:id="@+id/button_pause"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/pause"
-        app:layout_constraintBottom_toTopOf="@+id/refresh_button"
-        app:layout_constraintEnd_toStartOf="@+id/countdown_text"
-        app:layout_constraintHorizontal_bias="0.206"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
         android:id="@+id/button_start"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="140dp"
+        android:layout_height="55dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="24dp"
+        android:backgroundTint="#D2009688"
         android:text="@string/start"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_time" />
 
@@ -196,28 +204,28 @@
 
     <Button
         android:id="@+id/submit_time"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="55dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="#D2009688"
         android:text="@string/refresh_timer"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/countdown_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.294"
         app:layout_constraintStart_toEndOf="@+id/input_time"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75" />
+        app:layout_constraintVertical_bias="0.813" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_time"
         android:layout_width="232dp"
         android:layout_height="59dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.072"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/FirstImage">
 

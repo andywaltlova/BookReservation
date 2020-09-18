@@ -1,4 +1,4 @@
-package com.example.bookreservations;
+package com.andy.bookreservations;
 
 import android.os.Bundle;
 import android.view.MenuItem;

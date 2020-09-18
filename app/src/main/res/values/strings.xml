@@ -3,10 +3,10 @@
     <string name="zadej_as_pro_obnoven_s">zadej čas pro obnovení [s]</string>
     <string name="refresh_timer">Set time</string>
     <string name="_00_30">00:30</string>
-    <string name="start">START</string>
+    <string name="start">Start</string>
     <string name="library_logo">library logo</string>
     <string name="pause">Pause</string>
-    <string name="refresh_now">Refresh now</string>
+    <string name="refresh_now">Refresh</string>
     <string name="title_activity_settings">Settings</string>
     <string name="action_settings">Settings</string>
     <string name="API" translatable="false">API URL</string>

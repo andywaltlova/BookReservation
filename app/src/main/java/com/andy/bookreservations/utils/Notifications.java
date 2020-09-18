@@ -1,4 +1,4 @@
-package com.example.bookreservations.utils;
+package com.andy.bookreservations.utils;
 
 
 import android.app.Application;
@@ -12,8 +12,8 @@ import android.net.Uri;
 
 import androidx.core.app.NotificationCompat;
 
-import com.example.bookreservations.MainActivity;
-import com.example.bookreservations.R;
+import com.andy.bookreservations.MainActivity;
+import com.andy.bookreservations.R;
 
 public class Notifications extends Application {
     private static final String CHANNEL_ID = "channel_1";
@@ -30,8 +30,8 @@ public class Notifications extends Application {
 
 
     private void createNotificationChannel() {
-        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "ÚK FF MU - Žádanky", NotificationManager.IMPORTANCE_HIGH);
-        channel.setDescription("Slouží k upozorňování na nové žádanky :)");
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "ÚK FF MU - Book requests", NotificationManager.IMPORTANCE_HIGH);
+        channel.setDescription("Notifications on new book requests");
         channel.enableLights(true);
         channel.enableVibration(true);
         notificationManager.createNotificationChannel(channel);

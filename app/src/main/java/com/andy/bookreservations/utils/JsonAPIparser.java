@@ -1,5 +1,6 @@
-package com.example.bookreservations.utils;
+package com.andy.bookreservations.utils;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.text.Html;
 import android.view.View;
@@ -12,13 +13,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.example.bookreservations.R;
+import com.andy.bookreservations.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 
@@ -127,10 +129,9 @@ public class JsonAPIparser {
 
                 LocalDate date = parseDate(jsonArray.getString(0));
                 LocalTime time = parseTime(jsonArray.getString(1));
-                LocalTime now = LocalTime.now();
+                LocalTime now = LocalTime.now(ZoneId.of("Europe/Prague"));
 
-                long d_minutes = time.until(now, ChronoUnit.MINUTES);
-
+                long d_minutes = ChronoUnit.MINUTES.between(time, now);
                 timeColumn[0] += colorTime(time, d_minutes);
 
                 String barcode = jsonArray.getString(3);
@@ -158,11 +159,14 @@ public class JsonAPIparser {
                         // Aktualizovat posledni signaturu tou nejnovejsi - kvuli notifikaci
                         last_signature[0] = signature[0];
 
-                        if (response.length() == 0)
-                            empty_view.setText("Nic k vyhledání :)");
-                        else
+                        if (response.length() == 0) {
+                            empty_view.setTextColor(Color.parseColor("#009688"));
+                            String thumbs_up_emoji = new String(Character.toChars(0x1F44D));
+                            empty_view.setText("All work is done\n\n" + thumbs_up_emoji);
+                        } else {
                             empty_view.setText("");
                             parseResponse(response);
+                        }
                     }
                 }, new Response.ErrorListener() {
                     @Override

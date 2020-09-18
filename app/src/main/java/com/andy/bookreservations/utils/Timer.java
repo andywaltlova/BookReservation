@@ -1,4 +1,4 @@
-package com.example.bookreservations.utils;
+package com.andy.bookreservations.utils;
 
 import android.os.Build;
 import android.os.CountDownTimer;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.bookreservations.R;
+import com.andy.bookreservations.R;
 
 import java.util.Locale;
 
@@ -24,7 +24,6 @@ public class Timer {
 
     private EditText timeInput;
     private TextView mTextViewCountDown;
-    private Button mButtonPause;
     private Button mButtonStart;
     private Button mButtonSubmitTime;
 
@@ -79,7 +78,6 @@ public class Timer {
     public void setRootView() {
         mTextViewCountDown = rootView.findViewById(R.id.countdown_text);
         mButtonStart = rootView.findViewById(R.id.button_start);
-        mButtonPause = rootView.findViewById(R.id.button_pause);
         timeInput = rootView.findViewById(R.id.time_input);
         mButtonSubmitTime = rootView.findViewById(R.id.submit_time);
 
@@ -93,12 +91,12 @@ public class Timer {
             }
         });
 
-        mButtonPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateTimer();
-            }
-        });
+//        mButtonPause.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                updateTimer();
+//            }
+//        });
 
         mButtonSubmitTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,24 +125,10 @@ public class Timer {
     }
 
     private void updateButtons() {
-        if (isTimerRunning) {
-            mButtonPause.setVisibility(View.INVISIBLE);
+        if (isTimerRunning)
             mButtonStart.setText("Pause");
-        } else {
+        else
             mButtonStart.setText("Start");
-
-            if (timeLeftInMillis < 1000) {
-                mButtonStart.setVisibility(View.INVISIBLE);
-            } else {
-                mButtonStart.setVisibility(View.VISIBLE);
-            }
-
-            if (timeLeftInMillis < START_TIME_IN_MILLIS) {
-                mButtonPause.setVisibility(View.VISIBLE);
-            } else {
-                mButtonPause.setVisibility(View.INVISIBLE);
-            }
-        }
     }
 
     public long getTimeLeftInMillis() {

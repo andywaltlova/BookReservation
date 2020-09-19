@@ -23,13 +23,13 @@ import androidx.preference.PreferenceManager;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.andy.bookreservations.utils.JsonAPIparser;
+import com.andy.bookreservations.utils.JsonResponseParser;
 import com.andy.bookreservations.utils.Notifications;
 import com.andy.bookreservations.utils.Timer;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private View root;
-    private JsonAPIparser parser;
+    private JsonResponseParser parser;
     private Notifications notifications;
     private String apiUrl;
     private boolean shouldNotify;
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         notifications = new Notifications(this, shouldNotify, doneNotify);
-        parser = new JsonAPIparser(root, requestQueue, apiUrl, notifications);
+        parser = new JsonResponseParser(root, requestQueue, apiUrl, notifications);
         new Timer(root, parser);
 
         if (savedInstanceState == null && apiUrl != null)

@@ -21,14 +21,14 @@ public class Timer {
     private long endTime;
     private boolean isTimerRunning;
     private View rootView;
-    private JsonAPIparser parser;
+    private JsonResponseParser parser;
 
     private EditText timeInput;
     private TextView mTextViewCountDown;
     private Button mButtonStart;
     private Button mButtonSubmitTime;
 
-    public Timer(View root, JsonAPIparser parser, long timeLeftInMillis) {
+    public Timer(View root, JsonResponseParser parser, long timeLeftInMillis) {
         START_TIME_IN_MILLIS = timeLeftInMillis;
         this.timeLeftInMillis = timeLeftInMillis;
         this.rootView = root;
@@ -36,7 +36,7 @@ public class Timer {
         setRootView();
     }
 
-    public Timer(View root, JsonAPIparser parser) {
+    public Timer(View root, JsonResponseParser parser) {
         this(root, parser, 30000);
     }
 

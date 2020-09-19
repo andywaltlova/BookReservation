@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class JsonAPIparser {
+public class JsonResponseParser {
     private String apiUrl;
     private RequestQueue requestQueue;
     private Notifications notifications;
@@ -41,7 +41,7 @@ public class JsonAPIparser {
     private BookRequest new_request;
 
 
-    public JsonAPIparser(View root, RequestQueue queue, String apiUrl, Notifications notifications) {
+    public JsonResponseParser(View root, RequestQueue queue, String apiUrl, Notifications notifications) {
         this.apiUrl = apiUrl;
         this.requestQueue = queue;
         this.notifications = notifications;
@@ -64,10 +64,9 @@ public class JsonAPIparser {
     }
 
     private void shouldSendNotification(BookRequest last_signature, BookRequest new_signature) {
-        System.out.println(last_signature + "==" + new_signature);
         if (!new_signature.equals(last_signature)) {
-            String textMessage = "Signatura: " + new_signature.getLocation_number();
-            notifications.sendNotification("Nová rezervace", textMessage);
+            String textMessage = "Location number: " + new_signature.getLocation_number();
+            notifications.sendNotification("New request", textMessage);
         }
     }
 

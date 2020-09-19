@@ -1,5 +1,6 @@
 package com.andy.bookreservations.utils;
 
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -77,6 +78,7 @@ public class Timer {
 
     public void setRootView() {
         mTextViewCountDown = rootView.findViewById(R.id.countdown_text);
+        mTextViewCountDown.setTypeface(Typeface.SANS_SERIF);
         mButtonStart = rootView.findViewById(R.id.button_start);
         timeInput = rootView.findViewById(R.id.time_input);
         mButtonSubmitTime = rootView.findViewById(R.id.submit_time);

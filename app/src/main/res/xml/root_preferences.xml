@@ -17,9 +17,16 @@
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="notify"
-            android:summary="Click to turn on or off"
-            android:title="Notification"
+            android:summary="Notifications for new book requests"
+            android:title="Book requests"
             app:icon="@drawable/ic_baseline_notifications_active_24" />
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:dependency="notify"
+            android:key="notify_done"
+            android:summary="Notification to let me know that all book requests are processed"
+            android:title="Work done"
+            app:icon="@drawable/ic_baseline_check_24" />
 
     </PreferenceCategory>
 

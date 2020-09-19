@@ -1,8 +1,10 @@
 package com.andy.bookreservations.utils;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
-import android.text.Html;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,7 +23,10 @@ import org.json.JSONException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -30,30 +35,18 @@ public class JsonAPIparser {
     private RequestQueue requestQueue;
     private Notifications notifications;
 
-    private TextView text_view_order;
-    private TextView text_view_signatures;
-    private TextView text_view_barcode;
-    private TextView text_view_time;
-    private TextView text_view_date;
-    private TextView empty_view;
-    private TextView test_view;
-
-    private String[] last_signature = {""};
-    private String[] signature = {""};
+    private TextView message_view;
+    private TextView book_view;
+    private BookRequest last_request;
+    private BookRequest new_request;
 
 
     public JsonAPIparser(View root, RequestQueue queue, String apiUrl, Notifications notifications) {
         this.apiUrl = apiUrl;
         this.requestQueue = queue;
         this.notifications = notifications;
-
-        text_view_order = root.findViewById(R.id.text_view_order);
-        text_view_signatures = root.findViewById(R.id.text_view_signatures);
-        text_view_barcode = root.findViewById(R.id.text_view_barcode);
-        text_view_time = root.findViewById(R.id.text_view_time);
-        text_view_date = root.findViewById(R.id.text_view_date);
-        empty_view = root.findViewById(R.id.empty);
-        test_view = root.findViewById(R.id.test_view);
+        book_view = root.findViewById(R.id.book_view);
+        message_view = root.findViewById(R.id.message);
     }
 
     // Kvůli špatné češtině v API je třeba přepsat neznámé znaky
@@ -70,75 +63,58 @@ public class JsonAPIparser {
         return s;
     }
 
-    private void clearTextViews() {
-        test_view.setText("");
-        text_view_order.setText("");
-        text_view_signatures.setText("");
-        text_view_barcode.setText("");
-        text_view_time.setText("");
-        text_view_date.setText("");
-    }
-
-    private void sendNotification(String last_signature, String new_signature) {
-        if (!last_signature.equals(new_signature)) {
-            String textMessage = "Signatura: " + parseSignature(new_signature);
+    private void shouldSendNotification(BookRequest last_signature, BookRequest new_signature) {
+        System.out.println(last_signature + "==" + new_signature);
+        if (!new_signature.equals(last_signature)) {
+            String textMessage = "Signatura: " + new_signature.getLocation_number();
             notifications.sendNotification("Nová rezervace", textMessage);
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private LocalTime parseTime(String time_str) {
         String time = String.format(Locale.getDefault(), "%04d", Integer.parseInt(time_str));
         time = time.replaceAll("..(?!$)", "$0:");
         return LocalTime.parse(time);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private LocalDate parseDate(String date_str) {
+    private String parseDate(String date_str) {
         String date = date_str.replaceAll("^....(?!$)", "$0-");
         date = date.replaceAll("^.......(?!$)", "$0-");
-        return LocalDate.parse(date);
+        return LocalDate.parse(date).format(DateTimeFormatter.ofPattern("dd-MM-yy"));
     }
 
-    private String colorTime(LocalTime time, long d_minutes) {
-        String result;
+    private String getColorBasedOnRemainingTime(LocalTime time) {
+        LocalTime now = LocalTime.now(ZoneId.of("Europe/Prague"));
+        long d_minutes = ChronoUnit.MINUTES.between(time, now);
+
         if (d_minutes > 10 && d_minutes < 20)
-            result = "<font color=#FF8C00>" + time + "</font>" + "\n";
+            return "#009688";
         else if (d_minutes > 0 && d_minutes < 10)
-            result = "<font color=#9ACD32>" + time + "</font>" + "\n";
+            return "#FF9800";
         else
-            result = "<font color=#DC143C>" + time + "</font>" + "\n";
-        return result;
+            return "#DC143C";
     }
 
-    private void addResponseDataToViews(int order, String barcode, LocalDate date, String time) {
-        text_view_time.setText(Html.fromHtml(time, Html.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE);
-        text_view_order.append(String.format(Locale.getDefault(), "%02d", order) + ". \n");
-        text_view_signatures.append(parseSignature(signature[0]) + "\n");
-        text_view_barcode.append(barcode + "\n");
-        text_view_date.append(date.toString() + "\n");
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void parseResponse(JSONArray response) {
-        String[] timeColumn = {""};
+        List<BookRequest> books = new ArrayList<>();
+
         int order = 1;
         for (int i = response.length() - 1; i >= 0; i--) {
             try {
                 JSONArray jsonArray = response.getJSONArray(i);
+                BookRequest new_book = new BookRequest(parseSignature(jsonArray.getString(6)));
+                new_book.setOrder(order);
+                new_book.setBarcode(jsonArray.getString(3));
+                new_book.setDate(parseDate(jsonArray.getString(0)));
 
-                LocalDate date = parseDate(jsonArray.getString(0));
                 LocalTime time = parseTime(jsonArray.getString(1));
-                LocalTime now = LocalTime.now(ZoneId.of("Europe/Prague"));
-
-                long d_minutes = ChronoUnit.MINUTES.between(time, now);
-                timeColumn[0] += colorTime(time, d_minutes);
-
-                String barcode = jsonArray.getString(3);
+                new_book.setTime(time);
 
                 if (jsonArray.getString(4).equals("SKLAD")) {
-                    signature[0] = jsonArray.getString(6);
-                    addResponseDataToViews(order, barcode, date, timeColumn[0]);
+                    books.add(new_book);
+                    new_request = new_book;
                 }
                 order++;
 
@@ -146,26 +122,32 @@ public class JsonAPIparser {
                 e.printStackTrace();
             }
         }
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        book_view.setText("");
+        book_view.setTypeface(Typeface.MONOSPACE);
+        for (BookRequest book : books) {
+            SpannableString book_span = book.getColoredString(getColorBasedOnRemainingTime(book.getTime()));
+            book_view.setText(builder.append(book_span), TextView.BufferType.SPANNABLE);
+        }
     }
 
     public void jsonParse() {
-        clearTextViews();
         JsonArrayRequest request =
                 new JsonArrayRequest(Request.Method.GET, apiUrl, null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        sendNotification(last_signature[0], signature[0]);
-
-                        // Aktualizovat posledni signaturu tou nejnovejsi - kvuli notifikaci
-                        last_signature[0] = signature[0];
-
                         if (response.length() == 0) {
-                            empty_view.setTextColor(Color.parseColor("#009688"));
+                            message_view.setTextColor(Color.parseColor("#009688"));
                             String thumbs_up_emoji = new String(Character.toChars(0x1F44D));
-                            empty_view.setText("All work is done\n\n" + thumbs_up_emoji);
+                            message_view.setText("All work is done\n\n" + thumbs_up_emoji);
+                            if (notifications.isDoneNotif())
+                                notifications.sendNotification("You're the best!", "All work is done " + thumbs_up_emoji);
                         } else {
-                            empty_view.setText("");
+                            message_view.setText("");
                             parseResponse(response);
+                            shouldSendNotification(last_request, new_request);
+                            last_request = new_request;
                         }
                     }
                 }, new Response.ErrorListener() {

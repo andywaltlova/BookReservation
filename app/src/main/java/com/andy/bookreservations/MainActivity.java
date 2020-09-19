@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private Notifications notifications;
     private String apiUrl;
     private boolean shouldNotify;
+    private boolean doneNotify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,23 +55,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setupSharedPreferences();
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        notifications = new Notifications(this, shouldNotify);
+        notifications = new Notifications(this, shouldNotify, doneNotify);
         parser = new JsonAPIparser(root, requestQueue, apiUrl, notifications);
         new Timer(root, parser);
 
         if (savedInstanceState == null && apiUrl != null)
             parser.jsonParse();
-
-// Firebase crash testing
-//        Button crashButton = findViewById(R.id.crash_button);
-//        crashButton.setTextColor(Color.WHITE);
-//        crashButton.setText("Crash!");
-//        crashButton.setVisibility(View.VISIBLE);
-//        crashButton.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//                throw new RuntimeException("Test Crash"); // Force a crash
-//            }
-//        });
     }
 
     @Override
@@ -125,12 +115,17 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setPreferences(sharedPreferences);
         switch (key) {
             case "api_url": {
+                this.apiUrl = sharedPreferences.getString("api_url", null);
                 parser.setApiUrl(apiUrl);
                 new Timer(root, parser);
                 parser.jsonParse();
             }
             case "notify": {
-                notifications.setShouldNotify(shouldNotify);
+                System.out.println(sharedPreferences.getBoolean("notify", true));
+                notifications.setShouldNotify(sharedPreferences.getBoolean("notify", true));
+            }
+            case "notify_done": {
+                notifications.setDoneNotif(sharedPreferences.getBoolean("notify_late", false));
             }
         }
     }
@@ -143,15 +138,17 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     private void setPreferences(SharedPreferences sharedPreferences) {
+        this.shouldNotify = sharedPreferences.getBoolean("notify", true);
+        this.doneNotify = sharedPreferences.getBoolean("notify_done", true);
         this.apiUrl = sharedPreferences.getString("api_url", null);
-        TextView url_view = findViewById(R.id.empty);
+        TextView url_view = findViewById(R.id.message);
         if (apiUrl == null || apiUrl.equals("")) {
-            url_view.setTextColor(Color.parseColor("#FF5722"));
-            String scared_emoji = new String(Character.toChars(0x1F631));
-            url_view.setText("API URL address is not set\nGo to Settings -> API URL\n\n" + scared_emoji);
+            TextView book_view = findViewById(R.id.book_view);
+            book_view.setText("");
+            url_view.setTextColor(Color.parseColor("#DC143C"));
+            url_view.setText("---- API URL is not set ----\n(Settings -> API URL)");
         } else
             url_view.setText("");
-        this.shouldNotify = sharedPreferences.getBoolean("notify", true);
     }
 
 }

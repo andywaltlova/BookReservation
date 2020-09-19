@@ -20,11 +20,15 @@ public class Notifications extends Application {
     private NotificationManager notificationManager;
     private Context activityContex;
     private boolean shouldNotify;
+    private boolean lateNotif;
+    private boolean doneNotif;
 
-    public Notifications(Context activityContext, boolean shouldNotify) {
+
+    public Notifications(Context activityContext, boolean shouldNotify, boolean doneNotif) {
         this.activityContex = activityContext;
         this.notificationManager = activityContex.getSystemService(NotificationManager.class);
         this.shouldNotify = shouldNotify;
+        this.doneNotif = doneNotif;
         createNotificationChannel();
     }
 
@@ -34,6 +38,7 @@ public class Notifications extends Application {
         channel.setDescription("Notifications on new book requests");
         channel.enableLights(true);
         channel.enableVibration(true);
+        channel.setLockscreenVisibility(MODE_APPEND);
         notificationManager.createNotificationChannel(channel);
     }
 
@@ -54,7 +59,8 @@ public class Notifications extends Application {
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
-                    .setSound(alarmSound);
+                    .setSound(alarmSound)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
             notificationManager.notify(1, notification.build());
         }
@@ -64,5 +70,20 @@ public class Notifications extends Application {
         this.shouldNotify = shouldNotify;
     }
 
+    public void setLateNotif(boolean lateNotif) {
+        this.lateNotif = lateNotif;
+    }
+
+    public void setDoneNotif(boolean donedNotif) {
+        this.doneNotif = donedNotif;
+    }
+
+    public boolean isLateNotif() {
+        return lateNotif;
+    }
+
+    public boolean isDoneNotif() {
+        return doneNotif;
+    }
 }
 

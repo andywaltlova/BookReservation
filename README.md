@@ -1,8 +1,6 @@
 # LibraryApp <img align= "right" src="app/src/main/res/drawable/logo_knihovna.png" alt="drawing" width="300"/>
 
-
-## What the application can do
-Application is used to monitor requests for books that are in stocks of **Central Library of the Faculty of Arts** at Masaryk university. More about our library at https://knihovna.phil.muni.cz/ .
+Application can be used to monitor requests for books that are in stocks of **Central Library of the Faculty of Arts** at Masaryk university. More about our library at https://knihovna.phil.muni.cz/ .
 
 **When a new request for a book appears, the application sends a notification containing the location number of the book**, which makes it easier to find it in the library stocks.
 
@@ -21,7 +19,7 @@ For notifications to work properly, application needs to have permission to send
 If you want the application to send notifications even if it runs in the background, you need to enable it in the appropriate settings (usually by default the system itself puts the application to sleep to save battery consumption).
 
 ## API response
-The image below illustrates the API response that is used to retrieve current book reservations. For our purposes, the application uses the time, date, barcode and location number fields.**Currently there is option to set custom URL to API, but it will work only with exact same response structure as illustrated by image below**.
+The image below illustrates the API response that is used to retrieve current book reservations. For our purposes, the application uses the time, date, barcode and location number fields. **Currently there is option to set custom URL to API, but it will work only with exact same response structure as illustrated by image below**.
       
 ![API example](images/API_JSON_example.PNG)
 

@@ -85,13 +85,12 @@ public class JsonResponseParser {
     private String getColorBasedOnRemainingTime(LocalTime time) {
         LocalTime now = LocalTime.now(ZoneId.of("Europe/Prague"));
         long d_minutes = ChronoUnit.MINUTES.between(time, now);
-
-        if (d_minutes > 10 && d_minutes < 20)
-            return "#009688";
-        else if (d_minutes > 0 && d_minutes < 10)
-            return "#FF9800";
-        else
+        if (d_minutes > 20) {
             return "#DC143C";
+        } else if (d_minutes > 10) {
+            return "#FF9800";
+        } else
+            return "#009688";
     }
 
 
@@ -131,18 +130,38 @@ public class JsonResponseParser {
         }
     }
 
+    public boolean isThereMoreRequestsForSKLAD(JSONArray response) {
+        if (response.length() == 0)
+            return false;
+        for (int i = response.length() - 1; i >= 0; i--) {
+            try {
+                JSONArray jsonArray = response.getJSONArray(i);
+                if (jsonArray.getString(4).equals("SKLAD"))
+                    return true;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     public void jsonParse() {
         JsonArrayRequest request =
                 new JsonArrayRequest(Request.Method.GET, apiUrl, null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        if (response.length() == 0) {
+                        if (!isThereMoreRequestsForSKLAD(response)) {
+                            book_view.setText("");
                             message_view.setTextColor(Color.parseColor("#009688"));
                             String thumbs_up_emoji = new String(Character.toChars(0x1F44D));
                             message_view.setText("All work is done\n\n" + thumbs_up_emoji);
-                            if (notifications.isDoneNotif())
+                            System.out.println(notifications.isWorkDoneNotif());
+                            if (notifications.isWorkDoneNotif() && !notifications.isWorkDoneNotifSend()) {
                                 notifications.sendNotification("You're the best!", "All work is done " + thumbs_up_emoji);
+                                notifications.setWorkDoneNotifSend(true);
+                            }
                         } else {
+                            notifications.setWorkDoneNotifSend(false);
                             message_view.setText("");
                             parseResponse(response);
                             shouldSendNotification(last_request, new_request);

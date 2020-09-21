@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 notifications.setShouldNotify(sharedPreferences.getBoolean("notify", true));
             }
             case "notify_done": {
-                notifications.setDoneNotif(sharedPreferences.getBoolean("notify_late", false));
+                notifications.setWorkDoneNotif(sharedPreferences.getBoolean("notify_late", false));
             }
         }
     }

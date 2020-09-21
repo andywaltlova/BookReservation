@@ -21,14 +21,15 @@ public class Notifications extends Application {
     private Context activityContex;
     private boolean shouldNotify;
     private boolean lateNotif;
-    private boolean doneNotif;
+    private boolean workDoneNotif;
+    private boolean workDoneNotifSend = false;
 
 
-    public Notifications(Context activityContext, boolean shouldNotify, boolean doneNotif) {
+    public Notifications(Context activityContext, boolean shouldNotify, boolean workDoneNotif) {
         this.activityContex = activityContext;
         this.notificationManager = activityContex.getSystemService(NotificationManager.class);
         this.shouldNotify = shouldNotify;
-        this.doneNotif = doneNotif;
+        this.workDoneNotif = workDoneNotif;
         createNotificationChannel();
     }
 
@@ -74,16 +75,24 @@ public class Notifications extends Application {
         this.lateNotif = lateNotif;
     }
 
-    public void setDoneNotif(boolean donedNotif) {
-        this.doneNotif = donedNotif;
+    public void setWorkDoneNotif(boolean donedNotif) {
+        this.workDoneNotif = donedNotif;
     }
 
     public boolean isLateNotif() {
         return lateNotif;
     }
 
-    public boolean isDoneNotif() {
-        return doneNotif;
+    public boolean isWorkDoneNotif() {
+        return workDoneNotif;
+    }
+
+    public boolean isWorkDoneNotifSend() {
+        return workDoneNotifSend;
+    }
+
+    public void setWorkDoneNotifSend(boolean workDoneNotifSend) {
+        this.workDoneNotifSend = workDoneNotifSend;
     }
 }
 

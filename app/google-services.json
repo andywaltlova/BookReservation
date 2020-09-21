@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1059876851803",
+    "firebase_url": "https://requests-for-books.firebaseio.com",
+    "project_id": "requests-for-books",
+    "storage_bucket": "requests-for-books.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1059876851803:android:76cad6a79bce0baf022f7e",
+        "android_client_info": {
+          "package_name": "com.andy.bookreservations"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1059876851803-32v0lrl1i0clhtfnepdma0ms9dturv9u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuuJeeGtny2i5EWNp7a3D-_Tt24aUjKrA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1059876851803-32v0lrl1i0clhtfnepdma0ms9dturv9u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

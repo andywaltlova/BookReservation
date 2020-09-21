@@ -1,34 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container"
-    android:clickable="true"
-    android:focusableInTouchMode="true"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusable="true">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="0dp"
+    <Button
+        android:id="@+id/crash_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:background="?android:attr/windowBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="36dp"
+        android:backgroundTint="#E31919"
+        android:textColorHint="#FFFFFF"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/FirstImage"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <fragment
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:navGraph="@navigation/mobile_navigation" />
+
+    <ImageView
+        android:id="@+id/FirstImage"
+        android:layout_width="216dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/library_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_knihovna" />
+
+    <Button
+        android:id="@+id/button_start"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="126dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="67dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="21dp"
+        android:backgroundTint="#D2009688"
+        android:drawableStart="@drawable/ic_baseline_timer_24"
+        android:text="@string/start"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/refresh_button"
+        app:layout_constraintTop_toBottomOf="@+id/submit_time" />
+
+    <TextView
+        android:id="@+id/countdown_text"
+        android:layout_width="126dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="21dp"
+        android:text="@string/_00_30"
+        android:textAlignment="center"
+        android:textColor="#FF9800"
+        android:textSize="50sp"
+        android:typeface="monospace"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/FirstImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/submit_time"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="126dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="21dp"
+        android:backgroundTint="#D2009688"
+        android:drawableStart="@drawable/ic_baseline_check_24"
+        android:text="@string/refresh_timer"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/input_time"
+        app:layout_constraintTop_toBottomOf="@+id/countdown_text" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_time"
+        android:layout_width="202dp"
+        android:layout_height="66dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/FirstImage">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/time_input"
+            android:layout_width="201dp"
+            android:layout_height="56dp"
+            android:hint="@string/zadej_as_pro_obnoven_s"
+            android:imeActionId="666"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLength="6"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="205dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="206dp"
+        android:layout_marginBottom="8dp"
+        android:textAlignment="center"
+        android:textColor="#FF5722"
+        android:textSize="18sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/refresh_button"
+        app:layout_constraintVertical_bias="0.132"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/book_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="8dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/refresh_button" />
+
+    <Button
+        android:id="@+id/refresh_button"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="165dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#D2009688"
+        android:drawableStart="@drawable/ic_baseline_refresh_24"
+        android:text="@string/refresh_now"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textStyle="normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

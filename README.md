@@ -1,15 +1,23 @@
-# BookReservations
+# LibraryApp
 
-Application for managing book requests from the library stocks.
-My first experience with Java and the development of a mobile application.
+### WHAT IT IS
+Application is used to monitor requests for books that are in stocks of Central Library of the Faculty of Arts at Masaryk University. More about our library at https://knihovna.phil.muni.cz/ .
 
-### USAGE
-The application uses a request to extract data from the API and then print it and sort it on the screen. The API requires a password that is not available in the repository files.
+When a new request for a book appears, the application sends a notification containing the location number of the book, which makes it easier to find it in the library stocks.
 
-Example of API response that the application works with (it is a record of one request, ie one book).
+#### System Requirements
+- Minimal SDK version: 26 (Android 8.0)
+- Target SDK version: 30 (Android 10.0+)
 
-![API example](Pictures/API_JSON_example.PNG)
+### WHY
+The purpose of this application is to make library work more efficient. Now there is no need to walk around the printer and check if a new request is printed. As a library, we guarantee 20 minutes to process each book request, so it's important for staff to find out about new requests as soon as possible, regardless of where they are in the library.
+
+### API response
+The image below illustrates the API response that is used to retrieve current book reservations. For our purposes, the application uses the time, date, barcode and location number fields. Currently there is option to set custom URL to API, but it will work only with exact same response structure as illustrated by image below.
+      
+![API example](images/API_JSON_example.PNG)
 
 ### HOW IT LOOKS
 
-<img src="Pictures/visual.png" alt="drawing" width="300"/> <img src="Pictures/visual_with_notification.png" alt="drawing" width="300"/>
+<img src="images/main_visual.jpg" alt="drawing" width="300"/> <img src="images/notif_visual.jpg" alt="drawing" width="300"/> <img src="images/workDone_notif.jpg" alt="drawing" width="300"/>
+<img src="images/settings_visual.jpg" alt="drawing" width="300"/> <img src="images/about_visual.jpg" alt="drawing" width="300"/>

@@ -1,0 +1,33 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="@string/API_header">
+
+        <EditTextPreference
+            android:icon="@drawable/ic_baseline_insert_link_24"
+            app:key="api_url"
+            app:summary="Click to change API URL address"
+            app:title="@string/API"
+            app:useSimpleSummaryProvider="false" />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_notifications">
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="notify"
+            android:summary="Notifications for new book requests"
+            android:title="Book requests"
+            app:icon="@drawable/ic_baseline_notifications_active_24" />
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:dependency="notify"
+            android:key="notify_done"
+            android:summary="Notification to let me know that all book requests are processed"
+            android:title="Work done"
+            app:icon="@drawable/ic_baseline_check_24" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

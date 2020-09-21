@@ -2,9 +2,12 @@
 
 
 ### WHAT IT IS
-Application is used to monitor requests for books that are in stocks of **Central Library of the Faculty of Arts at Masaryk University**. More about our library at https://knihovna.phil.muni.cz/ .
+Application is used to monitor requests for books that are in stocks of **Central Library of the Faculty of Arts** at Masaryk university. More about our library at https://knihovna.phil.muni.cz/ .
 
-**When a new request for a book appears, the application sends a notification containing the location number of the book, which makes it easier to find it in the library stocks.**
+**When a new request for a book appears, the application sends a notification containing the location number of the book**, which makes it easier to find it in the library stocks.
+
+For notifications to work properly, application needs to have permission to send notifications (that currently needs to be manually enabled by user in smartphones settings).
+If you want the application to send notifications even if it runs in the background, you need to enable it in the appropriate settings (usually by default the system itself puts the application to sleep to save battery consumption).
 
 #### System Requirements
 - Minimal SDK version: 26 (Android 8.0)

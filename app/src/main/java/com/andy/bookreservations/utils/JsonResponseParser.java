@@ -34,9 +34,8 @@ public class JsonResponseParser {
     private String apiUrl;
     private RequestQueue requestQueue;
     private Notifications notifications;
-
-    private TextView message_view;
-    private TextView book_view;
+    private TextView messageView;
+    private TextView bookView;
     private BookRequest last_request;
     private BookRequest new_request;
 
@@ -45,12 +44,19 @@ public class JsonResponseParser {
         this.apiUrl = apiUrl;
         this.requestQueue = queue;
         this.notifications = notifications;
-        book_view = root.findViewById(R.id.book_view);
-        message_view = root.findViewById(R.id.message);
+        bookView = root.findViewById(R.id.book_view);
+        messageView = root.findViewById(R.id.message);
     }
 
-    // Kvůli špatné češtině v API je třeba přepsat neznámé znaky
-    private String parseSignature(String s) {
+    /**
+     * Because of wrong character encoding in API some czech chars
+     * in book location number needs to be fixed
+     * Currently there is only one czech char (č) in book location number
+     *
+     * @param s string to be replaced
+     * @return string with fixed czech chars
+     */
+    private String parseLocationNumber(String s) {
         if (s.contains(":")) {
             int index = s.indexOf(":");
             String[] parts = s.split(":");
@@ -63,9 +69,15 @@ public class JsonResponseParser {
         return s;
     }
 
-    private void shouldSendNotification(BookRequest last_signature, BookRequest new_signature) {
-        if (!new_signature.equals(last_signature)) {
-            String textMessage = "Location number: " + new_signature.getLocation_number();
+    /**
+     * Sends notification only if new book request was made (i.e last request is different than new)
+     *
+     * @param lastRequest last book request (from latest response)
+     * @param newRequest  new book request from currently processed response
+     */
+    private void shouldSendNotification(BookRequest lastRequest, BookRequest newRequest) {
+        if (!newRequest.equals(lastRequest)) {
+            String textMessage = "Location number: " + newRequest.getLocation_number();
             notifications.sendNotification("New request", textMessage);
         }
     }
@@ -76,12 +88,24 @@ public class JsonResponseParser {
         return LocalTime.parse(time);
     }
 
+    /**
+     * Parse date that is missing delimiter between day,month and year (e.g 01122020)
+     *
+     * @param date_str string representing date
+     * @return string representing date in format dd-MM-yy
+     */
     private String parseDate(String date_str) {
         String date = date_str.replaceAll("^....(?!$)", "$0-");
         date = date.replaceAll("^.......(?!$)", "$0-");
         return LocalDate.parse(date).format(DateTimeFormatter.ofPattern("dd-MM-yy"));
     }
 
+    /**
+     * Returns color code for color based on remaining time to process given book request
+     *
+     * @param time time when request was made
+     * @return string containing color code
+     */
     private String getColorBasedOnRemainingTime(LocalTime time) {
         LocalTime now = LocalTime.now(ZoneId.of("Europe/Prague"));
         long d_minutes = ChronoUnit.MINUTES.between(time, now);
@@ -93,16 +117,19 @@ public class JsonResponseParser {
             return "#009688";
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void parseResponse(JSONArray response) {
+    /**
+     * Parse data from response and then creates from them instances of BookRequest object.
+     *
+     * @param response JSONArray containing response from API
+     */
+    private void parseResponse(JSONArray response) {
         List<BookRequest> books = new ArrayList<>();
 
         int order = 1;
         for (int i = response.length() - 1; i >= 0; i--) {
             try {
                 JSONArray jsonArray = response.getJSONArray(i);
-                BookRequest new_book = new BookRequest(parseSignature(jsonArray.getString(6)));
+                BookRequest new_book = new BookRequest(parseLocationNumber(jsonArray.getString(6)));
                 new_book.setOrder(order);
                 new_book.setBarcode(jsonArray.getString(3));
                 new_book.setDate(parseDate(jsonArray.getString(0)));
@@ -120,17 +147,27 @@ public class JsonResponseParser {
                 e.printStackTrace();
             }
         }
+        addRequestsToTextView(books);
+    }
 
+
+    private void addRequestsToTextView(List<BookRequest> books) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
-        book_view.setText("");
-        book_view.setTypeface(Typeface.MONOSPACE);
+        bookView.setText("");
+        bookView.setTypeface(Typeface.MONOSPACE);
         for (BookRequest book : books) {
             SpannableString book_span = book.getColoredString(getColorBasedOnRemainingTime(book.getTime()));
-            book_view.setText(builder.append(book_span), TextView.BufferType.SPANNABLE);
+            bookView.setText(builder.append(book_span), TextView.BufferType.SPANNABLE);
         }
     }
 
-    public boolean isThereMoreRequestsForSKLAD(JSONArray response) {
+    /**
+     * Checks if response contains at least one request for book from stock.
+     *
+     * @param response JSONArray responde from API
+     * @return True if there is at least one book request, False otherwise
+     */
+    private boolean isThereMoreRequestsForSKLAD(JSONArray response) {
         if (response.length() == 0)
             return false;
         for (int i = response.length() - 1; i >= 0; i--) {
@@ -145,16 +182,19 @@ public class JsonResponseParser {
         return false;
     }
 
+    /**
+     * Main function in JsonResponseParser class. Responsible for making request to API.
+     */
     public void jsonParse() {
         JsonArrayRequest request =
                 new JsonArrayRequest(Request.Method.GET, apiUrl, null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         if (!isThereMoreRequestsForSKLAD(response)) {
-                            book_view.setText("");
-                            message_view.setTextColor(Color.parseColor("#009688"));
+                            bookView.setText("");
+                            messageView.setTextColor(Color.parseColor("#009688"));
                             String thumbs_up_emoji = new String(Character.toChars(0x1F44D));
-                            message_view.setText("All work is done\n\n" + thumbs_up_emoji);
+                            messageView.setText("All work is done\n\n" + thumbs_up_emoji);
                             System.out.println(notifications.isWorkDoneNotif());
                             if (notifications.isWorkDoneNotif() && !notifications.isWorkDoneNotifSend()) {
                                 notifications.sendNotification("You're the best!", "All work is done " + thumbs_up_emoji);
@@ -162,7 +202,7 @@ public class JsonResponseParser {
                             }
                         } else {
                             notifications.setWorkDoneNotifSend(false);
-                            message_view.setText("");
+                            messageView.setText("");
                             parseResponse(response);
                             shouldSendNotification(last_request, new_request);
                             last_request = new_request;

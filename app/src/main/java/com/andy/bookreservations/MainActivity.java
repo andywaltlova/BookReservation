@@ -27,6 +27,7 @@ import com.andy.bookreservations.utils.JsonResponseParser;
 import com.andy.bookreservations.utils.Notifications;
 import com.andy.bookreservations.utils.Timer;
 
+
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private View root;
     private JsonResponseParser parser;
@@ -141,6 +142,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         this.shouldNotify = sharedPreferences.getBoolean("notify", true);
         this.doneNotify = sharedPreferences.getBoolean("notify_done", true);
         this.apiUrl = sharedPreferences.getString("api_url", null);
+        isApiUrlSet();
+    }
+
+    private void isApiUrlSet() {
         TextView url_view = findViewById(R.id.message);
         if (apiUrl == null || apiUrl.equals("")) {
             TextView book_view = findViewById(R.id.book_view);

@@ -24,7 +24,7 @@
             android:defaultValue="false"
             android:dependency="notify"
             android:key="notify_done"
-            android:summary="Notification to let me know that all book requests are processed"
+            android:summary="Notification to let me know that all book requests were processed"
             android:title="Work done"
             app:icon="@drawable/ic_baseline_check_24" />
 

@@ -4,12 +4,16 @@ import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 
+import androidx.annotation.NonNull;
+
 import java.time.LocalTime;
 import java.util.Locale;
 import java.util.Objects;
 
+/**
+ * Class represents one book request or book reservation that is retrieved from API
+ */
 public class BookRequest {
-
     private int order;
     private String location_number;
     private String barcode;
@@ -33,13 +37,21 @@ public class BookRequest {
         return Objects.hash(getBarcode());
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return String.format(Locale.getDefault(), "%s  %s  %-9s  %s", date , time, location_number, barcode);
+        return String.format(Locale.getDefault(), "%s  %s  %-9s  %s", date, time, location_number, barcode);
     }
 
-    public SpannableString getColoredString(String color){
-        SpannableString str= new SpannableString(this.toString() + "\n");
+    /**
+     * Return Colored String, important for user to know remaining time to process book request
+     * (Color indicates remaining time)
+     *
+     * @param color String representation of color code
+     * @return Span string colored with given color
+     */
+    public SpannableString getColoredString(String color) {
+        SpannableString str = new SpannableString(this.toString() + "\n");
         str.setSpan(new ForegroundColorSpan(Color.parseColor(color)), 0, str.length(), 0);
         return str;
     }

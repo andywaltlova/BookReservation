@@ -42,7 +42,6 @@ public class Timer {
 
     private void startTimer() {
         endTime = System.currentTimeMillis() + timeLeftInMillis;
-
         countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -92,13 +91,6 @@ public class Timer {
                     startTimer();
             }
         });
-
-//        mButtonPause.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                updateTimer();
-//            }
-//        });
 
         mButtonSubmitTime.setOnClickListener(new View.OnClickListener() {
             @Override

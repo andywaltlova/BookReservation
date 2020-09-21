@@ -43,6 +43,12 @@ public class Notifications extends Application {
         notificationManager.createNotificationChannel(channel);
     }
 
+    /**
+     * Sends notification with given title and text
+     *
+     * @param textTitle   Title of notification
+     * @param textMessage Text content of notification
+     */
     public void sendNotification(String textTitle, String textMessage) {
         if (shouldNotify) {
             final Intent intent = new Intent(activityContex, MainActivity.class);

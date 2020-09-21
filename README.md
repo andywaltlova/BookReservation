@@ -1,4 +1,4 @@
-# LibraryApp <img align= "right" src="app/src/main/res/drawable/logo_knihovna.png" alt="drawing" width="245"/>
+# LibraryApp <img align= "right" src="app/src/main/res/drawable/logo_knihovna.png" alt="drawing" width="260"/>
 
 
 Application can be used to monitor requests for books that are in stocks of **Central Library of the Faculty of Arts** at Masaryk university. More about our library at https://knihovna.phil.muni.cz/ .

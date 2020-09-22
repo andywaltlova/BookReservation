@@ -26,6 +26,6 @@ The image below illustrates the API response that is used to retrieve current bo
 
 ## How the application looks
 
-<img src="images/colors_visual.jpg" alt="drawing" width="300"/> <img src="images/main_visual.jpg" alt="drawing" width="300"/> <img src="images/workDone_notif.jpg" alt="drawing" width="300"/>
+<img src="images/colors_visual.jpg" alt="drawing" width="250"/> <img src="images/main_visual.jpg" alt="drawing" width="250"/> <img src="images/workDone_notif.jpg" alt="drawing" width="250"/>
 
-<img src="images/settings_visual.jpg" alt="drawing" width="300"/> <img src="images/about_visual.jpg" alt="drawing" width="300"/>
+<img src="images/settings_visual.jpg" alt="drawing" width="250"/> <img src="images/about_visual.jpg" alt="drawing" width="250"/>

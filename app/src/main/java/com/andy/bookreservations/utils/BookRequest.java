@@ -6,7 +6,9 @@ import android.text.style.ForegroundColorSpan;
 
 import androidx.annotation.NonNull;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -18,7 +20,7 @@ public class BookRequest {
     private String location_number;
     private String barcode;
     private LocalTime time;
-    private String date;
+    private LocalDate date;
 
     public BookRequest(String location_number) {
         this.location_number = location_number;
@@ -40,7 +42,7 @@ public class BookRequest {
     @NonNull
     @Override
     public String toString() {
-        return String.format(Locale.getDefault(), "%s  %s  %-9s  %s", date, time, location_number, barcode);
+        return String.format(Locale.getDefault(), "%s  %s  %-9s  %s", date.format(DateTimeFormatter.ofPattern("dd-MM-yy")), time, location_number, barcode);
     }
 
     /**
@@ -88,11 +90,11 @@ public class BookRequest {
         this.time = time;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }

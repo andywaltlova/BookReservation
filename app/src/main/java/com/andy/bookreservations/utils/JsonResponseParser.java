@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -94,10 +95,10 @@ public class JsonResponseParser {
      * @param date_str string representing date
      * @return string representing date in format dd-MM-yy
      */
-    private String parseDate(String date_str) {
+    private LocalDate parseDate(String date_str) {
         String date = date_str.replaceAll("^....(?!$)", "$0-");
         date = date.replaceAll("^.......(?!$)", "$0-");
-        return LocalDate.parse(date).format(DateTimeFormatter.ofPattern("dd-MM-yy"));
+        return LocalDate.parse(date);
     }
 
     /**
@@ -106,12 +107,14 @@ public class JsonResponseParser {
      * @param time time when request was made
      * @return string containing color code
      */
-    private String getColorBasedOnRemainingTime(LocalTime time) {
-        LocalTime now = LocalTime.now(ZoneId.of("Europe/Prague"));
-        long d_minutes = ChronoUnit.MINUTES.between(time, now);
-        if (d_minutes > 20) {
+    private String getColorBasedOnRemainingTime(LocalTime time, LocalDate date) {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Europe/Prague"));
+        long diffMinutes = ChronoUnit.MINUTES.between(time, now.toLocalTime());
+        long diffDays = ChronoUnit.DAYS.between(date, now.toLocalDate());
+
+        if (diffMinutes > 20 || diffDays > 0) {
             return "#DC143C";
-        } else if (d_minutes > 10) {
+        } else if (diffMinutes > 10) {
             return "#FF9800";
         } else
             return "#009688";
@@ -156,7 +159,7 @@ public class JsonResponseParser {
         bookView.setText("");
         bookView.setTypeface(Typeface.MONOSPACE);
         for (BookRequest book : books) {
-            SpannableString book_span = book.getColoredString(getColorBasedOnRemainingTime(book.getTime()));
+            SpannableString book_span = book.getColoredString(getColorBasedOnRemainingTime(book.getTime(), book.getDate()));
             bookView.setText(builder.append(book_span), TextView.BufferType.SPANNABLE);
         }
     }

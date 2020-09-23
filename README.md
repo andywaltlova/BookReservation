@@ -19,7 +19,9 @@ All book requests that are displayed in the application always have one of three
 For notifications to work properly, application needs to have permission to send notifications (that currently needs to be manually enabled by user in smartphones settings).
 If you want the application to send notifications even if it runs in the background, you need to enable it in the appropriate settings (usually by default the system itself puts the application to sleep to save battery consumption).
 
+### Installation
 **Currently the app s not available on Google play.** (Mainly because to fully use the application, you also need a link to the internal library API.)
+However you can use [APK file](app/release/app-release.apk) in this repository to manually install app to your android phone.
 
 ## API response
 The image below illustrates the API response that is used to retrieve current book reservations. For our purposes, the application uses the time, date, barcode and location number fields. **Currently there is option to set custom URL to API, but it will work only with exact same response structure as illustrated by image below**.
